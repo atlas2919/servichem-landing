@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-XXXXXXXXXX");
+    </script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Servichem S.A. | Soluciones químicas e ingeniería</title>
+    <meta
+      name="description"
+      content="Servichem S.A. Soluciones químicas e ingeniería para tratamiento de agua, vapor, limpieza técnica y eficiencia energética."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <header class="header header--dark">
+      <div class="container header__content">
+        <div class="brand">
+          <img
+            src="public/logo1.svg"
+            alt="Servichem S.A."
+            class="brand__logo"
+          />
+        </div>
+
+        <nav class="nav">
+          <a href="#soluciones">Soluciones</a>
+          <a href="#sectores">Sectores</a>
+          <a href="#contacto" class="nav__cta" id="ctaCotizarNav">Cotizar</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero__grid">
+          <div class="hero__text">
+            <span class="badge"
+              >Tratamiento de agua • Vapor • Limpieza técnica</span
+            >
+            <h1>
+              Soluciones químicas e ingeniería para
+              <span>optimizar tu operación industrial</span>
+            </h1>
+            <p>
+              Reducimos incrustación, corrosión y consumo energético mediante
+              programas técnicos, productos especializados y soporte en campo.
+            </p>
+
+            <div class="hero__actions">
+              <a href="#contacto" class="btn btn--primary" id="ctaCotizarHero"
+                >Cotizar ahora</a
+              >
+              <a href="#soluciones" class="btn btn--secondary"
+                >Ver soluciones</a
+              >
+            </div>
+          </div>
+
+          <div class="hero__card card">
+            <h3 class="card__title">Diagnóstico rápido</h3>
+            <p class="card__text">
+              Cuéntanos tu sistema y te recomendamos la solución adecuada.
+            </p>
+
+            <form class="form" id="diagnosticoForm">
+              <input
+                type="text"
+                name="sistema"
+                id="diagSistema"
+                placeholder="Sistema (caldera, RO, enfriamiento)"
+                required
+              />
+              <input
+                type="text"
+                name="ciudad"
+                id="diagCiudad"
+                placeholder="Ciudad"
+                required
+              />
+              <button type="submit" class="btn btn--primary">Enviar</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="soluciones">
+        <div class="container">
+          <h2>Soluciones</h2>
+          <div class="grid">
+            <div class="card">
+              <h3>Tratamiento de calderas</h3>
+              <p>Control de incrustación, corrosión y eficiencia térmica.</p>
+            </div>
+            <div class="card">
+              <h3>Sistemas de enfriamiento</h3>
+              <p>Biocidas, inhibidores y control microbiológico.</p>
+            </div>
+            <div class="card">
+              <h3>Ósmosis inversa</h3>
+              <p>Diseño, venta y limpieza de membranas.</p>
+            </div>
+            <div class="card">
+              <h3>Limpieza técnica</h3>
+              <p>Detergentes, desinfectantes y limpieza industrial.</p>
+            </div>
+            <div class="card">
+              <h3>Eficiencia energética</h3>
+              <p>Recuperación de condensado y optimización de vapor.</p>
+            </div>
+            <div class="card">
+              <h3>Laboratorio</h3>
+              <p>Análisis de agua, reactivos y capacitación técnica.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--dark" id="sectores">
+        <div class="container">
+          <h2>Sectores</h2>
+          <div class="tags">
+            <span>Industria</span>
+            <span>Alimentos</span>
+            <span>Hotelería</span>
+            <span>Lavandería</span>
+            <span>Plantas de agua</span>
+            <span>Construcción</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="contacto">
+        <div class="container contact">
+          <div>
+            <h2>Contacto</h2>
+            <p>Solicita una cotización o diagnóstico técnico.</p>
+            <p><strong>Email:</strong> fabiann@serviaguasintegral.com</p>
+            <p><strong>WhatsApp:</strong> +593 997 825 505</p>
+          </div>
+
+          <form class="card form">
+            <input type="text" placeholder="Nombre" />
+            <input type="email" placeholder="Email" />
+            <textarea placeholder="Cuéntanos tu necesidad"></textarea>
+            <button class="btn btn--primary">Enviar mensaje</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer__content">
+        <p>© 2025 Servichem S.A. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+
+    <!-- script -->
+    <script src="app.js"></script>
+    <div class="toast" id="toast" role="status" aria-live="polite">
+      <span class="toast__title">¡Listo!</span>
+      <span class="toast__text">Gracias, te contactaremos.</span>
+    </div>
+  </body>
+</html>
