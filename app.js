@@ -35,7 +35,10 @@
 
   function openWhatsApp(message) {
     var url =
-      "https://wa.me/" + WHATSAPP_PHONE + "?text=" + encodeURIComponent(message);
+      "https://wa.me/" +
+      WHATSAPP_PHONE +
+      "?text=" +
+      encodeURIComponent(message);
     window.open(url, "_blank");
   }
 
@@ -105,15 +108,22 @@
 
       var mensaje =
         "Hola Servichem, quiero un diagnóstico técnico.\n\n" +
-        "Sistema: " + sistema + "\n" +
-        "Ciudad: " + ciudad + "\n\n" +
+        "Sistema: " +
+        sistema +
+        "\n" +
+        "Ciudad: " +
+        ciudad +
+        "\n\n" +
         "¿Me pueden recomendar la solución adecuada y una cotización?";
 
       fireEvent("diagnostico_submit", {
         sistema: sistema,
-        ciudad: ciudad
+        ciudad: ciudad,
       });
-      fireEvent("whatsapp_open", { source: "diagnostico", intent: "diagnostico" });
+      fireEvent("whatsapp_open", {
+        source: "diagnostico",
+        intent: "diagnostico",
+      });
 
       openWhatsApp(mensaje);
 

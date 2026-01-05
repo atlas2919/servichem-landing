@@ -599,29 +599,29 @@ header + .hero {
   }
 }
 
-.header{
+.header {
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
 }
 
-.hero{
+.hero {
   margin-top: -2px;
 }
 /* =========================
    UI: Toast + Validación
    ========================= */
 
-.toast{
+.toast {
   position: fixed;
   left: 50%;
   bottom: 18px;
   transform: translateX(-50%) translateY(20px);
-  background: rgba(255,255,255,0.92);
+  background: rgba(255, 255, 255, 0.92);
   color: #0b1220;
-  border: 1px solid rgba(15,23,42,0.12);
+  border: 1px solid rgba(15, 23, 42, 0.12);
   border-radius: 14px;
   padding: 12px 14px;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
   display: flex;
   gap: 10px;
   align-items: center;
@@ -632,22 +632,22 @@ header + .hero {
   max-width: min(520px, calc(100vw - 24px));
 }
 
-.toast--show{
+.toast--show {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
 
-.toast__title{
+.toast__title {
   font-weight: 900;
 }
 
-.toast__text{
-  color: rgba(11,18,32,0.72);
+.toast__text {
+  color: rgba(11, 18, 32, 0.72);
   font-weight: 700;
 }
 
 /* Inputs inválidos */
-.is-invalid{
-  border-color: rgba(239,68,68,0.75) !important;
-  box-shadow: 0 0 0 3px rgba(239,68,68,0.12);
+.is-invalid {
+  border-color: rgba(239, 68, 68, 0.75) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
 }
