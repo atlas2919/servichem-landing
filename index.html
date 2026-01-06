@@ -12,7 +12,6 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-CYH6XGZT2P");
     </script>
 
@@ -62,7 +61,8 @@
             </p>
 
             <div class="hero__actions">
-              <a href="#contacto" class="btn btn--primary" id="ctaCotizarHero"
+              <!-- Cambiado a # para que el JS controle WhatsApp sin "scroll" -->
+              <a href="#" class="btn btn--primary" id="ctaCotizarHero"
                 >Cotizar ahora</a
               >
               <a href="#soluciones" class="btn btn--secondary"
@@ -153,11 +153,17 @@
             <p><strong>WhatsApp:</strong> +593 997 825 505</p>
           </div>
 
-          <form class="card form">
-            <input type="text" placeholder="Nombre" />
-            <input type="email" placeholder="Email" />
-            <textarea placeholder="Cuéntanos tu necesidad"></textarea>
-            <button class="btn btn--primary">Enviar mensaje</button>
+          <form class="card form" id="contactoForm">
+            <input type="text" name="nombre" placeholder="Nombre" required />
+            <input type="email" name="email" placeholder="Email" required />
+            <textarea
+              name="mensaje"
+              placeholder="Cuéntanos tu necesidad"
+              required
+            ></textarea>
+            <button type="submit" class="btn btn--primary">
+              Enviar mensaje
+            </button>
           </form>
         </div>
       </section>
@@ -169,11 +175,13 @@
       </div>
     </footer>
 
-    <!-- script -->
-    <script src="app.js"></script>
+    <!-- toast (ANTES del script para que el JS lo encuentre siempre) -->
     <div class="toast" id="toast" role="status" aria-live="polite">
       <span class="toast__title">¡Listo!</span>
       <span class="toast__text">Gracias, te contactaremos.</span>
     </div>
+
+    <!-- script -->
+    <script src="app.js"></script>
   </body>
 </html>

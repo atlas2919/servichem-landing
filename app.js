@@ -1,8 +1,9 @@
-// diagnostico.js
+// app.js (o diagnostico.js)
 // - Envía Diagnóstico rápido a WhatsApp (mensaje dinámico)
 // - Conecta CTAs (Hero + Navbar) al mismo WhatsApp
 // - Dispara conversion events (GA4) si gtag está disponible
 // - Muestra toast: "Gracias, te contactaremos"
+// - (Opcional recomendado) usa evento estándar GA4: generate_lead
 
 (function () {
   // === CONFIG ===
@@ -28,6 +29,7 @@
   }
 
   function fireEvent(eventName, params) {
+    // GA4 event (solo si GA está cargado)
     if (typeof window.gtag === "function") {
       window.gtag("event", eventName, params || {});
     }
@@ -35,10 +37,7 @@
 
   function openWhatsApp(message) {
     var url =
-      "https://wa.me/" +
-      WHATSAPP_PHONE +
-      "?text=" +
-      encodeURIComponent(message);
+      "https://wa.me/" + WHATSAPP_PHONE + "?text=" + encodeURIComponent(message);
     window.open(url, "_blank");
   }
 
@@ -65,8 +64,16 @@
       "Me interesa recibir asesoría para elegir la solución adecuada.\n" +
       "¿Me pueden ayudar?";
 
+    // Eventos (custom)
     fireEvent("cta_cotizar_click", { source: source });
     fireEvent("whatsapp_open", { source: source, intent: "cotizar" });
+
+    // Evento estándar recomendado para conversiones (puedes marcarlo como Key event)
+    fireEvent("generate_lead", {
+      source: source,
+      method: "whatsapp",
+      intent: "cotizar",
+    });
 
     openWhatsApp(msg);
     showToast("Gracias, te contactaremos.");
@@ -89,6 +96,7 @@
     form.addEventListener("submit", function (e) {
       e.preventDefault();
 
+      // OJO: usamos los names "sistema" y "ciudad" del HTML
       var sistema = (form.elements["sistema"].value || "").trim();
       var ciudad = (form.elements["ciudad"].value || "").trim();
 
@@ -116,20 +124,71 @@
         "\n\n" +
         "¿Me pueden recomendar la solución adecuada y una cotización?";
 
-      fireEvent("diagnostico_submit", {
-        sistema: sistema,
-        ciudad: ciudad,
-      });
-      fireEvent("whatsapp_open", {
+      // Eventos (custom)
+      fireEvent("diagnostico_submit", { sistema: sistema, ciudad: ciudad });
+      fireEvent("whatsapp_open", { source: "diagnostico", intent: "diagnostico" });
+
+      // Evento estándar recomendado para conversiones
+      fireEvent("generate_lead", {
         source: "diagnostico",
+        method: "whatsapp",
         intent: "diagnostico",
       });
 
       openWhatsApp(mensaje);
 
+      // UX
       form.reset();
       setInvalid(inputSistema, false);
       setInvalid(inputCiudad, false);
+      showToast("Gracias, te contactaremos.");
+    });
+  }
+
+  // === (Opcional) Contacto: si quieres que "Enviar mensaje" también abra WhatsApp ===
+  // Si NO lo quieres, borra este bloque.
+  var contactoForm = $("contactoForm");
+  if (contactoForm) {
+    contactoForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      var nombre = (contactoForm.elements["nombre"].value || "").trim();
+      var email = (contactoForm.elements["email"].value || "").trim();
+      var mensaje = (contactoForm.elements["mensaje"].value || "").trim();
+
+      var ok2 = true;
+      if (!nombre) ok2 = false;
+      if (!email) ok2 = false;
+      if (!mensaje) ok2 = false;
+
+      if (!ok2) {
+        showToast("Completa nombre, email y mensaje.");
+        fireEvent("contacto_invalid", { reason: "validation" });
+        return;
+      }
+
+      var waMsg =
+        "Hola Servichem, quisiera contactarlos.\n\n" +
+        "Nombre: " +
+        nombre +
+        "\n" +
+        "Email: " +
+        email +
+        "\n" +
+        "Mensaje: " +
+        mensaje;
+
+      fireEvent("contacto_submit", { method: "whatsapp" });
+      fireEvent("whatsapp_open", { source: "contacto", intent: "contacto" });
+      fireEvent("generate_lead", {
+        source: "contacto",
+        method: "whatsapp",
+        intent: "contacto",
+      });
+
+      openWhatsApp(waMsg);
+
+      contactoForm.reset();
       showToast("Gracias, te contactaremos.");
     });
   }
