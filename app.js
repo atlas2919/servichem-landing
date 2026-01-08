@@ -1,15 +1,19 @@
-// app.js (o diagnostico.js)
-// - Envía Diagnóstico rápido a WhatsApp (mensaje dinámico)
-// - Conecta CTAs (Hero + Navbar) al mismo WhatsApp
-// - Dispara conversion events (GA4) si gtag está disponible
-// - Muestra toast: "Gracias, te contactaremos"
-// - (Opcional recomendado) usa evento estándar GA4: generate_lead
+// app.js
+// - Diagnóstico rápido -> WhatsApp
+// - CTA Cotizar (Hero + Navbar) -> WhatsApp
+// - Contacto -> Email (mailto)
+// - GA4 events + toast UX
 
 (function () {
-  // === CONFIG ===
-  var WHATSAPP_PHONE = "593997825505"; // sin +, sin espacios
+  // =====================
+  // CONFIG
+  // =====================
+  var WHATSAPP_PHONE = "593997825505";
+  var CONTACT_EMAIL = "fabiann@serviaguasintegral.com";
 
-  // === Helpers ===
+  // =====================
+  // HELPERS
+  // =====================
   function $(id) {
     return document.getElementById(id);
   }
@@ -22,41 +26,60 @@
     if (textNode && message) textNode.textContent = message;
 
     toast.classList.add("toast--show");
-    window.clearTimeout(showToast._t);
-    showToast._t = window.setTimeout(function () {
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(function () {
       toast.classList.remove("toast--show");
     }, 2800);
   }
 
-  function fireEvent(eventName, params) {
-    // GA4 event (solo si GA está cargado)
+  function fireEvent(name, params) {
     if (typeof window.gtag === "function") {
-      window.gtag("event", eventName, params || {});
+      window.gtag("event", name, params || {});
     }
   }
 
   function openWhatsApp(message) {
     var url =
-      "https://wa.me/" + WHATSAPP_PHONE + "?text=" + encodeURIComponent(message);
+      "https://wa.me/" +
+      WHATSAPP_PHONE +
+      "?text=" +
+      encodeURIComponent(message);
     window.open(url, "_blank");
+  }
+
+  function openEmail(subject, body) {
+    var url =
+      "mailto:fabiann@serviaguasintegral.com" +
+      "?subject=" +
+      encodeURIComponent(subject) +
+      "&body=" +
+      encodeURIComponent(body);
+
+    window.location.href = url;
   }
 
   function setInvalid(el, invalid) {
     if (!el) return;
-    if (invalid) el.classList.add("is-invalid");
-    else el.classList.remove("is-invalid");
+    el.classList.toggle("is-invalid", invalid);
   }
 
-  // === Elements ===
-  var form = $("diagnosticoForm");
-  var inputSistema = $("diagSistema");
-  var inputCiudad = $("diagCiudad");
+  // =====================
+  // ELEMENTS
+  // =====================
+  var diagnosticoForm = $("diagnosticoForm");
+  var diagSistema = $("diagSistema");
+  var diagCiudad = $("diagCiudad");
 
   var ctaHero = $("ctaCotizarHero");
   var ctaNav = $("ctaCotizarNav");
 
-  // === CTA: Cotizar Hero + Navbar => WhatsApp ===
-  function handleCotizarClick(source, e) {
+  var contactoForm = $("contactoForm");
+  var ctaEmail = $("ctaEmail");
+
+  // =====================
+  // CTA COTIZAR -> WHATSAPP
+  // =====================
+  function handleCotizar(source, e) {
     if (e) e.preventDefault();
 
     var msg =
@@ -64,11 +87,7 @@
       "Me interesa recibir asesoría para elegir la solución adecuada.\n" +
       "¿Me pueden ayudar?";
 
-    // Eventos (custom)
     fireEvent("cta_cotizar_click", { source: source });
-    fireEvent("whatsapp_open", { source: source, intent: "cotizar" });
-
-    // Evento estándar recomendado para conversiones (puedes marcarlo como Key event)
     fireEvent("generate_lead", {
       source: source,
       method: "whatsapp",
@@ -81,32 +100,31 @@
 
   if (ctaHero) {
     ctaHero.addEventListener("click", function (e) {
-      handleCotizarClick("hero", e);
+      handleCotizar("hero", e);
     });
   }
 
   if (ctaNav) {
     ctaNav.addEventListener("click", function (e) {
-      handleCotizarClick("navbar", e);
+      handleCotizar("navbar", e);
     });
   }
 
-  // === Diagnóstico: submit => validar + WhatsApp + eventos + toast ===
-  if (form) {
-    form.addEventListener("submit", function (e) {
+  // =====================
+  // DIAGNÓSTICO -> WHATSAPP
+  // =====================
+  if (diagnosticoForm) {
+    diagnosticoForm.addEventListener("submit", function (e) {
       e.preventDefault();
 
-      // OJO: usamos los names "sistema" y "ciudad" del HTML
-      var sistema = (form.elements["sistema"].value || "").trim();
-      var ciudad = (form.elements["ciudad"].value || "").trim();
+      var sistema = (diagnosticoForm.elements["sistema"].value || "").trim();
+      var ciudad = (diagnosticoForm.elements["ciudad"].value || "").trim();
 
       var ok = true;
+      setInvalid(diagSistema, !sistema);
+      setInvalid(diagCiudad, !ciudad);
 
-      setInvalid(inputSistema, !sistema);
-      setInvalid(inputCiudad, !ciudad);
-
-      if (!sistema) ok = false;
-      if (!ciudad) ok = false;
+      if (!sistema || !ciudad) ok = false;
 
       if (!ok) {
         showToast("Revisa los campos marcados.");
@@ -124,11 +142,7 @@
         "\n\n" +
         "¿Me pueden recomendar la solución adecuada y una cotización?";
 
-      // Eventos (custom)
       fireEvent("diagnostico_submit", { sistema: sistema, ciudad: ciudad });
-      fireEvent("whatsapp_open", { source: "diagnostico", intent: "diagnostico" });
-
-      // Evento estándar recomendado para conversiones
       fireEvent("generate_lead", {
         source: "diagnostico",
         method: "whatsapp",
@@ -137,17 +151,16 @@
 
       openWhatsApp(mensaje);
 
-      // UX
-      form.reset();
-      setInvalid(inputSistema, false);
-      setInvalid(inputCiudad, false);
+      diagnosticoForm.reset();
+      setInvalid(diagSistema, false);
+      setInvalid(diagCiudad, false);
       showToast("Gracias, te contactaremos.");
     });
   }
 
-  // === (Opcional) Contacto: si quieres que "Enviar mensaje" también abra WhatsApp ===
-  // Si NO lo quieres, borra este bloque.
-  var contactoForm = $("contactoForm");
+  // =====================
+  // CONTACTO -> EMAIL (FORM)
+  // =====================
   if (contactoForm) {
     contactoForm.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -156,40 +169,56 @@
       var email = (contactoForm.elements["email"].value || "").trim();
       var mensaje = (contactoForm.elements["mensaje"].value || "").trim();
 
-      var ok2 = true;
-      if (!nombre) ok2 = false;
-      if (!email) ok2 = false;
-      if (!mensaje) ok2 = false;
-
-      if (!ok2) {
+      if (!nombre || !email || !mensaje) {
         showToast("Completa nombre, email y mensaje.");
         fireEvent("contacto_invalid", { reason: "validation" });
         return;
       }
 
-      var waMsg =
-        "Hola Servichem, quisiera contactarlos.\n\n" +
+      var subject = "Contacto desde web Servichem";
+      var body =
+        "Hola Servichem,\n\n" +
         "Nombre: " +
         nombre +
         "\n" +
         "Email: " +
         email +
-        "\n" +
-        "Mensaje: " +
+        "\n\n" +
+        "Mensaje:\n" +
         mensaje;
 
-      fireEvent("contacto_submit", { method: "whatsapp" });
-      fireEvent("whatsapp_open", { source: "contacto", intent: "contacto" });
+      fireEvent("contacto_submit", { method: "email" });
       fireEvent("generate_lead", {
         source: "contacto",
-        method: "whatsapp",
-        intent: "contacto",
+        method: "email",
+        intent: "form",
       });
 
-      openWhatsApp(waMsg);
-
+      openEmail(subject, body);
       contactoForm.reset();
-      showToast("Gracias, te contactaremos.");
+      showToast("Listo, abre tu correo para enviar.");
+    });
+  }
+
+  // =====================
+  // CTA "ESCRIBIR POR EMAIL"
+  // =====================
+  if (ctaEmail) {
+    ctaEmail.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      var subject = "Contacto desde web Servichem";
+      var body = "Hola Servichem,\n\nQuisiera más información.";
+
+      fireEvent("cta_email_click", { source: "contacto" });
+      fireEvent("generate_lead", {
+        source: "contacto",
+        method: "email",
+        intent: "cta",
+      });
+
+      openEmail(subject, body);
+      showToast("Listo, abre tu correo para enviar.");
     });
   }
 })();

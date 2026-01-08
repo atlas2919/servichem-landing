@@ -29,11 +29,7 @@
     <header class="header header--dark">
       <div class="container header__content">
         <div class="brand">
-          <img
-            src="public/logo1.svg"
-            alt="Servichem S.A."
-            class="brand__logo"
-          />
+          <img src="public/logo1.svg" alt="Servichem S.A." class="brand__logo" />
         </div>
 
         <nav class="nav">
@@ -48,9 +44,7 @@
       <section class="hero">
         <div class="container hero__grid">
           <div class="hero__text">
-            <span class="badge"
-              >Tratamiento de agua • Vapor • Limpieza técnica</span
-            >
+            <span class="badge">Tratamiento de agua • Vapor • Limpieza técnica</span>
             <h1>
               Soluciones químicas e ingeniería para
               <span>optimizar tu operación industrial</span>
@@ -61,13 +55,9 @@
             </p>
 
             <div class="hero__actions">
-              <!-- Cambiado a # para que el JS controle WhatsApp sin "scroll" -->
-              <a href="#" class="btn btn--primary" id="ctaCotizarHero"
-                >Cotizar ahora</a
-              >
-              <a href="#soluciones" class="btn btn--secondary"
-                >Ver soluciones</a
-              >
+              <!-- href="#" para que el JS controle WhatsApp sin scroll -->
+              <a href="#" class="btn btn--primary" id="ctaCotizarHero">Cotizar ahora</a>
+              <a href="#soluciones" class="btn btn--secondary">Ver soluciones</a>
             </div>
           </div>
 
@@ -144,29 +134,37 @@
         </div>
       </section>
 
+      <!-- ✅ CONTACTO (HTML válido) -->
       <section class="section" id="contacto">
-        <div class="container contact">
-          <div>
-            <h2>Contacto</h2>
-            <p>Solicita una cotización o diagnóstico técnico.</p>
-            <p><strong>Email:</strong> fabiann@serviaguasintegral.com</p>
-            <p><strong>WhatsApp:</strong> +593 997 825 505</p>
-          </div>
+  <div class="container contact">
+    <div>
+      <h2>Contacto</h2>
+      <p>Solicita una cotización o diagnóstico técnico.</p>
 
-          <form class="card form" id="contactoForm">
-            <input type="text" name="nombre" placeholder="Nombre" required />
-            <input type="email" name="email" placeholder="Email" required />
-            <textarea
-              name="mensaje"
-              placeholder="Cuéntanos tu necesidad"
-              required
-            ></textarea>
-            <button type="submit" class="btn btn--primary">
-              Enviar mensaje
-            </button>
-          </form>
-        </div>
-      </section>
+      <p>
+        <strong>Email:</strong>
+        <a href="mailto:fabiann@serviaguasintegral.com">
+          fabiann@serviaguasintegral.com
+        </a>
+      </p>
+
+    </div>
+
+    <form class="card form" id="contactoForm">
+      <input type="text" name="nombre" placeholder="Nombre" required />
+      <input type="email" name="email" placeholder="Email" required />
+
+      <textarea
+        name="mensaje"
+        placeholder="Cuéntanos tu necesidad"
+        required
+      ></textarea>
+
+      <button type="submit" class="btn btn--primary">Enviar mensaje</button>
+    </form>
+  </div>
+</section>
+
     </main>
 
     <footer class="footer">
@@ -175,13 +173,12 @@
       </div>
     </footer>
 
-    <!-- toast (ANTES del script para que el JS lo encuentre siempre) -->
+    <!-- toast (antes del script para que el JS lo encuentre siempre) -->
     <div class="toast" id="toast" role="status" aria-live="polite">
       <span class="toast__title">¡Listo!</span>
       <span class="toast__text">Gracias, te contactaremos.</span>
     </div>
 
-    <!-- script -->
     <script src="app.js"></script>
   </body>
 </html>
