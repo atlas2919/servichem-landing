@@ -176,16 +176,7 @@
       }
 
       var subject = "Contacto desde web Servichem";
-      var body =
-        "Hola Servichem,\n\n" +
-        "Nombre: " +
-        nombre +
-        "\n" +
-        "Email: " +
-        email +
-        "\n\n" +
-        "Mensaje:\n" +
-        mensaje;
+      var body = "Hola Servichem,\n\n" + "Mensaje:\n" + mensaje;
 
       fireEvent("contacto_submit", { method: "email" });
       fireEvent("generate_lead", {
