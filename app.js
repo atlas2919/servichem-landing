@@ -1,5 +1,5 @@
 // app.js
-// - Diagnóstico rápido -> WhatsApp
+// - Diagnóstico rápido -> WhatsApp (con Nombre)
 // - CTA Cotizar (Hero + Navbar) -> WhatsApp
 // - Contacto -> Email (mailto)
 // - GA4 events + toast UX
@@ -49,7 +49,8 @@
 
   function openEmail(subject, body) {
     var url =
-      "mailto:fabiann@serviaguasintegral.com" +
+      "mailto:" +
+      CONTACT_EMAIL +
       "?subject=" +
       encodeURIComponent(subject) +
       "&body=" +
@@ -67,6 +68,7 @@
   // ELEMENTS
   // =====================
   var diagnosticoForm = $("diagnosticoForm");
+  var diagNombre = $("diagNombre");
   var diagSistema = $("diagSistema");
   var diagCiudad = $("diagCiudad");
 
@@ -74,7 +76,6 @@
   var ctaNav = $("ctaCotizarNav");
 
   var contactoForm = $("contactoForm");
-  var ctaEmail = $("ctaEmail");
 
   // =====================
   // CTA COTIZAR -> WHATSAPP
@@ -87,9 +88,9 @@
       "Me interesa recibir asesoría para elegir la solución adecuada.\n" +
       "¿Me pueden ayudar?";
 
-    fireEvent("cta_cotizar_click", { source: source });
+    fireEvent("cta_cotizar_click", { source });
     fireEvent("generate_lead", {
-      source: source,
+      source,
       method: "whatsapp",
       intent: "cotizar",
     });
@@ -98,33 +99,29 @@
     showToast("Gracias, te contactaremos.");
   }
 
-  if (ctaHero) {
-    ctaHero.addEventListener("click", function (e) {
-      handleCotizar("hero", e);
-    });
-  }
-
-  if (ctaNav) {
-    ctaNav.addEventListener("click", function (e) {
-      handleCotizar("navbar", e);
-    });
-  }
+  if (ctaHero)
+    ctaHero.addEventListener("click", (e) => handleCotizar("hero", e));
+  if (ctaNav)
+    ctaNav.addEventListener("click", (e) => handleCotizar("navbar", e));
 
   // =====================
-  // DIAGNÓSTICO -> WHATSAPP
+  // DIAGNÓSTICO -> WHATSAPP (CON NOMBRE)
   // =====================
   if (diagnosticoForm) {
     diagnosticoForm.addEventListener("submit", function (e) {
       e.preventDefault();
 
+      var nombre = (diagnosticoForm.elements["nombre"].value || "").trim();
       var sistema = (diagnosticoForm.elements["sistema"].value || "").trim();
       var ciudad = (diagnosticoForm.elements["ciudad"].value || "").trim();
 
       var ok = true;
+
+      setInvalid(diagNombre, !nombre);
       setInvalid(diagSistema, !sistema);
       setInvalid(diagCiudad, !ciudad);
 
-      if (!sistema || !ciudad) ok = false;
+      if (!nombre || !sistema || !ciudad) ok = false;
 
       if (!ok) {
         showToast("Revisa los campos marcados.");
@@ -134,6 +131,9 @@
 
       var mensaje =
         "Hola Servichem, quiero un diagnóstico técnico.\n\n" +
+        "Nombre: " +
+        nombre +
+        "\n" +
         "Sistema: " +
         sistema +
         "\n" +
@@ -142,7 +142,12 @@
         "\n\n" +
         "¿Me pueden recomendar la solución adecuada y una cotización?";
 
-      fireEvent("diagnostico_submit", { sistema: sistema, ciudad: ciudad });
+      fireEvent("diagnostico_submit", {
+        nombre,
+        sistema,
+        ciudad,
+      });
+
       fireEvent("generate_lead", {
         source: "diagnostico",
         method: "whatsapp",
@@ -152,14 +157,16 @@
       openWhatsApp(mensaje);
 
       diagnosticoForm.reset();
+      setInvalid(diagNombre, false);
       setInvalid(diagSistema, false);
       setInvalid(diagCiudad, false);
+
       showToast("Gracias, te contactaremos.");
     });
   }
 
   // =====================
-  // CONTACTO -> EMAIL (FORM)
+  // CONTACTO -> EMAIL
   // =====================
   if (contactoForm) {
     contactoForm.addEventListener("submit", function (e) {
@@ -176,7 +183,7 @@
       }
 
       var subject = "Contacto desde web Servichem";
-      var body = "Hola Servichem,\n\n" + "Mensaje:\n" + mensaje;
+      var body = "Nombre: " + nombre + "\n \n" + "Mensaje:\n" + mensaje;
 
       fireEvent("contacto_submit", { method: "email" });
       fireEvent("generate_lead", {
@@ -187,28 +194,6 @@
 
       openEmail(subject, body);
       contactoForm.reset();
-      showToast("Listo, abre tu correo para enviar.");
-    });
-  }
-
-  // =====================
-  // CTA "ESCRIBIR POR EMAIL"
-  // =====================
-  if (ctaEmail) {
-    ctaEmail.addEventListener("click", function (e) {
-      e.preventDefault();
-
-      var subject = "Contacto desde web Servichem";
-      var body = "Hola Servichem,\n\nQuisiera más información.";
-
-      fireEvent("cta_email_click", { source: "contacto" });
-      fireEvent("generate_lead", {
-        source: "contacto",
-        method: "email",
-        intent: "cta",
-      });
-
-      openEmail(subject, body);
       showToast("Listo, abre tu correo para enviar.");
     });
   }
